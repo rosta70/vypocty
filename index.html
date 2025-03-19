@@ -138,6 +138,60 @@ nav a:hover {
         .custom-labelHmotnost {
         color: blue;
     }
+    body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .controls-container {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 5px;
+        }
+        .control-row {
+            display: flex;
+            align-items: center;
+        }
+        .control-input {
+            width: 50px;
+            height: 20px;
+            margin: 2px;
+            text-align: center;
+            background-color: #ffcc00;
+            font-size: 16px;
+        }
+        .control-label {
+            font-size: 12px;
+            margin-bottom: 2px;
+        }
+        .multiply-symbol {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 8px;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            border: 1px solid yellow; /* Žluté okraje */
+            background-color: black; /* Černé pozadí */
+            width: 10px;
+            height: 5px;
+            min-width: 10px;
+            min-height: 5px;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
@@ -167,15 +221,40 @@ nav a:hover {
         <input type="number" id="mInput" name="m" step="any" value="1" required>
         <label for="mInput">m</label>
         <br><br>
-         <label for="ks1" class="wide-label">Základna Řady</label><br>
-        <label>ks:&nbsp;</label>
-        <div class="inline-field">
-            <input type="number" id="ks1" name="ks1" step="any" value="1" required>
+        <div class="container">
+                 
+            <div class="controls-container">
+                <div class="control-group">
+                    <span class="control-label">Základna</span>
+                    <div class="control-row">
+                        <span>ks:</span>
+                        <input type="number" min="1" value="1" class="control-input" id="columnsInput">
+                    </div>
+                </div>
+                
+                <span class="multiply-symbol">X</span>
+                
+                <div class="control-group">
+                    <span class="control-label">Řady</span>
+                    <div class="control-row">
+                        <input type="number" min="1" value="1" class="control-input" id="rowsInput">
+                    </div>
+                </div>
+            </div>
+            
+            <table id="dynamicTable">
+                <!-- Tabulka se vygeneruje pomocí JavaScriptu -->
+            </table>
         </div>
-        <div class="x-label">x&nbsp;</div>
-        <div class="inline-field">
-            <input type="number" id="ks2" name="ks2" step="any" value="1" required>
-        </div>
+        <!--<label for="rowsInput" class="wide-label">Základna Řady</label><br> -->
+       <!--<label>ks:&nbsp;</label>-->
+       <div class="inline-field">
+           <!--<input type="number" id="rowsInput" name="ks1" step="any" value="1" required>-->
+       </div>
+<!-- <div class="x-label">x&nbsp;</div>-->
+       <div class="inline-field">
+          <!-- <input type="number" id="columnsInput" name="ks2" step="any" value="1" required> -->
+       </div>
         <br><br>
         <label for="minuInput" span class="green-text" >Zadej kolik chceš odečíst kusů:</label>
         <input type="number" id="minuInput" name="minu" step="any" value="0" required>
@@ -186,6 +265,7 @@ nav a:hover {
         <button id="calculateButton2" type="button" class="multiline-button2">Výpočet pro<br>SKUTEČNOU<br>hmotnost</button>
          <br><br>
     </div>
+    
 
     <div id="result"></div>
     <script>
@@ -259,6 +339,50 @@ nav a:hover {
 ];
         autocomplete(document.getElementById("profileInput"), profiles);
     </script>
+        <script>
+            // Výchozí hodnoty
+            let rows = 1;
+            let columns = 1;
+    
+            // Funkce pro vytvoření tabulky
+            function createTable() {
+                const table = document.getElementById('dynamicTable');
+                
+                // Vyčistit stávající obsah tabulky
+                table.innerHTML = '';
+                
+                // Vytvořit tabulku
+                for (let i = 0; i < rows; i++) {
+                    const row = document.createElement('tr');
+                    
+                    for (let j = 0; j < columns; j++) {
+                        const cell = document.createElement('td');
+                        // Buňky jsou prázdné
+                        row.appendChild(cell);
+                    }
+                    
+                    table.appendChild(row);
+                }
+            }
+    
+            // Nastavení event listenerů
+            document.getElementById('rowsInput').addEventListener('input', function() {
+                if (this.value && this.validity.valid && this.value > 0) {
+                    rows = parseInt(this.value);
+                    createTable();
+                }
+            });
+    
+            document.getElementById('columnsInput').addEventListener('input', function() {
+                if (this.value && this.validity.valid && this.value > 0) {
+                    columns = parseInt(this.value);
+                    createTable();
+                }
+            });
+    
+            // Inicializace při načtení stránky
+            window.onload = createTable;
+        </script>
      <script>
         const data = [
 {"profil":"E100","kgm":8.9},
@@ -790,12 +914,12 @@ document.getElementById('calculateButton').addEventListener('click', function(){
         const mValue = parseFloat(document.getElementById('mInput').value.trim());
         const hValue = parseFloat(document.getElementById('hInput').value.trim());
         const minuValue = parseFloat(document.getElementById('minuInput').value.trim());
-        const ks1 = parseFloat(document.getElementById('ks1').value.trim());
-        const ks2 = parseFloat(document.getElementById('ks2').value.trim());
+        const rowsInput = parseFloat(document.getElementById('rowsInput').value.trim());
+        const columnsInput = parseFloat(document.getElementById('columnsInput').value.trim());
         
         const final2Value = hValue * mValue;
         const finalValue = foundKgm * mValue;
-        const ksProduct = ks1 * ks2;
+        const ksProduct = rowsInput * columnsInput;
         const totalValue = finalValue * ksProduct;
         const t2otalValue = (finalValue * ksProduct) - (minuValue * finalValue);
         const minu2Value = ksProduct - minuValue
@@ -805,7 +929,7 @@ document.getElementById('calculateButton').addEventListener('click', function(){
         resultDiv.innerHTML = 
             `Profil: ${foundProfile} = ${foundKgm} kg/m.<br>` +
             `Délka: ${mValue}m = ${finalValue} kg.<br>` +
-            `Základna (${ks1}ks) krát výška (${ks2}ks) = ${ksProduct} kusů celkem.<br>` +
+            `Základna (${rowsInput}ks) krát výška (${columnsInput}ks) = ${ksProduct} kusů celkem.<br>` +
             `Kusy k odečtení: ${minuValue} ks.<br>` +
             `Celkem: <span class="red-text">${ksProduct} ks = ${totalValue.toFixed(1)} kg</span class="red-text"> /  nebo: <span class="green-text">  ${minu2Value} ks =  ${t2otalValue.toFixed(1)} kg </span class="green-text"> <br>`;
         }
@@ -815,11 +939,11 @@ document.getElementById('calculateButton').addEventListener('click', function(){
             const hValue = parseFloat(document.getElementById('hInput').value.trim());
             const mValue = parseFloat(document.getElementById('mInput').value.trim());
             const minuValue = parseFloat(document.getElementById('minuInput').value.trim());
-            const ks1 = parseFloat(document.getElementById('ks1').value.trim());
-            const ks2 = parseFloat(document.getElementById('ks2').value.trim());
+            const rowsInput = parseFloat(document.getElementById('rowsInput').value.trim());
+            const columnsInput = parseFloat(document.getElementById('columnsInput').value.trim());
             
             const final2Value = hValue * mValue;
-            const ksProduct = ks1 * ks2;
+            const ksProduct = rowsInput * columnsInput;
             const totalValue2 = final2Value * ksProduct;
             const t2otalValue2 = (final2Value * ksProduct) - (minuValue * final2Value);
             const minu2Value = ksProduct - minuValue
@@ -829,7 +953,7 @@ document.getElementById('calculateButton').addEventListener('click', function(){
             resultDiv.innerHTML = 
                 `Skutečná hmotnost: ${hValue}kg.<br>` +
                 `Délka: ${mValue}m = ${final2Value} kg.<br>` +
-                `Základna (${ks1}ks) krát výška (${ks2}ks) = ${ksProduct} kusů celkem.<br>` +
+                `Základna (${rowsInput}ks) krát výška (${columnsInput}ks) = ${ksProduct} kusů celkem.<br>` +
                 `Kusy k odečtení: ${minuValue} ks.<br>` +
                 `Celkem:  <span class="blue-text"> ${ksProduct} ks = ${totalValue2.toFixed(1)} kg </span class="blue-text">/ nebo:   <span class="green-text"> ${minu2Value} ks =   ${t2otalValue2.toFixed(1)}kg </span class="green-text">  <br>`;
         });
@@ -895,9 +1019,4 @@ document.getElementById('calculateButton').addEventListener('click', function(){
         }
     </script>
 </body>
-     <footer>
-
-        <p>&copy; 2025 Rosťa</p>
-
-    </footer>
 </html>
