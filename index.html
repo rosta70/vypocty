@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profily a ukládání</title>
+    <style>
+    nav ul {
+    list-style-type: none;
+    text-align: center;
+    padding: 10px 10px;
+    margin: 0;
+    background-color: grey; /* Bílé pozadí */
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+nav li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+nav a {
+    display: inline-block;
+    padding: 10px 18px;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+/* Efekt jemného zvednutí při najetí */
+nav a:hover {
+    background-color: #f0f0f0;
+    border-color: #bbb;
+    transform: translateY(-2px);
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+}
+        .inline-field {
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .inline-field input {
+            width: 50px;
+        }
+        .x-label {
+            display: inline-block;
+            margin-right: 5px;
+            margin-left: 5px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+        #mInput {
+            width: 60px; 
+            text-align: center;
+        }
+        #hInput {
+            width: 60px; 
+            text-align: center;
+        }
+        #minuInput {
+            width: 40px;
+            text-align: center;
+        }
+        #profileInput {
+            text-align: center;
+            font-weight: bold;
+            background-color: #ffcc00;
+        }
+        #ks1 {
+            width: 50px;
+            text-align: center;
+        }
+        #ks2 {
+            width: 50px;
+            text-align: center;
+        }
+        /* Styl pro dropdown našeptávač */
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+        }
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+        .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+        .autocomplete-active {
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
+        .multiline-button1 {
+            white-space: normal;
+            word-wrap: break-word;
+            width: 120px;
+            height: 60px;
+            color: red
+            }
+        .multiline-button2 {
+            white-space: normal;
+            word-wrap: break-word;
+            width: 120px;
+            height: 60px; 
+            color: blue
+        }
+        .wide-label {
+        word-spacing: 30px; /* Nastavit počet pixelů pro mezeru mezi slovy */
+         background-color: 
+        }
+        .red-text {
+            color: red;
+        }
+        .blue-text {
+            color: blue;
+        }
+        .green-text {
+            color: green;
+        }
+        .custom-label {
+        color: red; 
+        }
+        .custom-labelHmotnost {
+        color: blue;
+    }
+    body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .controls-container {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 5px;
+        }
+        .control-row {
+            display: flex;
+            align-items: center;
+        }
+        .control-input {
+            width: 50px;
+            height: 20px;
+            margin: 2px;
+            text-align: center;
+            background-color: #ffcc00;
+            font-size: 16px;
+        }
+        .control-label {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+        .multiply-symbol {
+            font-size: 25px;
+            font-weight: bold;
+            margin: 0 8px;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            border: 1px solid yellow; /* Žluté okraje */
+            background-color: black; /* Černé pozadí */
+            width: 10px;
+            height: 5px;
+            min-width: 10px;
+            min-height: 5px;
+            padding: 0;
+        }
+        
+        /* Kontejner pro tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Text tooltipu */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Šipka pro tooltip */
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Zobrazení tooltipu při najetí myší */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+/* Centrování tlačítka s tooltipem */
+.tooltip-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
+}
+
+/* Upravený tooltip, aby si zachoval funkčnost */
+.tooltip-container .tooltip {
+  position: relative;
+  display: inline-block;
+}
+    </style>
+</head>
+<body>
+   
+    </nav>
+    <h1><div align="center">Vyhledávání metrové hmotnosti a výpočet hm. svazků</h1>
+    <h2><div align="center">Zadej profil:</h2>
+         <div class="tooltip-container">
+            <div class="tooltip">
+                <button  id="loadDataButton" type="button">Načíst data</button>
+              <span class="tooltiptext">Načte data pokud jsou uložená v paměti prohlížeče.</span>
+            </div>
+          </div>
+    
+    
+</div>
+    <div align="center">
+    <form id="searchForm">
+      <div class="autocomplete" style="width:300px; position: relative;">
+        <label for="profileInput">Profil: </label>
+        <input type="text" id="profileInput" name="profile" size="10" required>
+         <button type="submit">Vyhledat</button>
+         </div>
+       </form>
+    <div id="profileResult"></div>
+    <div id="calculationForm" class="hidden">
+        <label for="inputField" class="custom-label">(Teoretická hmotnost)</label>
+        <br><br>
+        <label for="hInput" class="custom-labelHmotnost">Zadej skutečnou hmotnost:</label>
+        <input type="number" id="hInput" name="h" step="any" value="0" required>
+        <label for="hInput">kg/m</label>
+        <br>
+        <label for="hInput" class="custom-labelHmotnost">(Nemusíš zadávat pokud ti stačí výsledek s teor. hmotností)</label>
+        <br><br>
+        <label for="mInput">Zadej délku:  </label>
+        <input type="number" id="mInput" name="m" step="any" value="1" required>
+        <label for="mInput">m</label>
+        <br><br>
+        <div class="container">
+                 
+            <div class="controls-container">
+                <div class="control-group">
+                    <span class="control-label">&nbsp&nbsp&nbsp&nbspZákladna</span>
+                    <div class="control-row">
+                        <span>ks:&nbsp&nbsp</span>
+                        <input type="number" min="1" value="1" class="control-input" id="columnsInput">
+                    </div>
+                </div>
+                
+                <span class="multiply-symbol">X</span>
+                
+                <div class="control-group">
+                    <span class="control-label">Řady</span>
+                    <div class="control-row">
+                        <input type="number" min="1" value="1" class="control-input" id="rowsInput">
+                    </div>
+                </div>
+            </div>
+            
+            <table id="dynamicTable">
+                <!-- Tabulka se vygeneruje pomocí JavaScriptu -->
+            </table>
+        </div>
+        <!--<label for="rowsInput" class="wide-label">Základna Řady</label><br> -->
+       <!--<label>ks:&nbsp;</label>-->
+       <div class="inline-field">
+           <!--<input type="number" id="rowsInput" name="ks1" step="any" value="1" required>-->
+       </div>
+<!-- <div class="x-label">x&nbsp;</div>-->
+       <div class="inline-field">
+          <!-- <input type="number" id="columnsInput" name="ks2" step="any" value="1" required> -->
+       </div>
+        <br><br>
+        <label for="minuInput" span class="green-text" >Zadej kolik chceš odečíst kusů:</label>
+        <input type="number" id="minuInput" name="minu" step="any" value="0" required>
+        <label for="minuInput">ks</label>
+        
+        <br><br>
+        <button id="calculateButton" type="button" class="multiline-button1">Výpočet pro<br>TEORETICKOU<br>hmotnost</button>
+        <button id="calculateButton2" type="button" class="multiline-button2">Výpočet pro<br>SKUTEČNOU<br>hmotnost</button>
+                <div class="tooltip-container">
+            <div class="tooltip">
+               <button id="saveDataButton" type="button">Uložit data</button>
+              <span class="tooltiptext">Uloží data do paměti prohlížeče.</span>
+            </div>
+          </div>
+          <div class="tooltip-container">
+            <div class="tooltip">
+               <button id="clearDataButton" type="button">Vymazat data</button>
+              <span class="tooltiptext">Vymaže data prohlížeče.</span>
+            </div>
+          </div>
+
+        
+          <div id="statusMessage" style="margin: 10px 0; padding: 10px; border-radius: 5px; display: none;"></div>
+    </div>
+    
+
+    <div id="result"></div>
+    <script>
+        function autocomplete(inp, arr) {
+            let currentFocus;
+            inp.addEventListener("input", function(e) {
+                let a, b, i, val = this.value;
+                closeAllLists();
+                if (!val) { return false;}
+                currentFocus = -1;
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                this.parentNode.appendChild(a);
+                for (i = 0; i < arr.length; i++) {
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                        b = document.createElement("DIV");
+                        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                        b.innerHTML += arr[i].substr(val.length);
+                        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                        b.addEventListener("click", function(e) {
+                            inp.value = this.getElementsByTagName("input")[0].value;
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                }
+            });
+            inp.addEventListener("keydown", function(e) {
+                let x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    currentFocus++;
+                    addActive(x);
+                } else if (e.keyCode == 38) { 
+                    currentFocus--;
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                        if (x) x[currentFocus].click();
+                    }
+                }
+            });
+            function addActive(x) {
+                if (!x) return false;
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                x[currentFocus].classList.add("autocomplete-active");
+            }
+            function removeActive(x) {
+                for (let i = 0; i < x.length; i++) {
+                    x[i].classList.remove("autocomplete-active");
+                }
+            }
+            function closeAllLists(elmnt) {
+                let x = document.getElementsByClassName("autocomplete-items");
+                for (let i = 0; i < x.length; i++) {
+                    if (elmnt != x[i] && elmnt != inp) {
+                        x[i].parentNode.removeChild(x[i]);
+                    }
+                }
+            }
+            document.addEventListener("click", function (e) {
+                closeAllLists(e.target);
+            });
+        }
+
+        const profiles = ["E100",	"E100A",	"E100AA",	"E120",	"E120A",	"E120AA",	"E140",	"E140A",	"E140AA",	"E80" ,	"E80A",	"E80AA",	"FAB14",	"FAB16",	"FAB20",	"FAB22",	"FAB25",	"FAB28",	"I100",	"I120",	"I140",	"I80",	"KT15",	"KT15N",	"KT20",	"KT20N",	"KT26.5",	"KT26.5N",	"O10",	"O12",	"O14",	"O15",	"O16",	"O17",	"O18",	"O19",	"O20",	"O22",	"O23",	"O24",	"O25",	"O26",	"O27",	"O28",	"O29",	"O30",	"O31",	"O32",	"O34",	"O35",	"O36",	"O37",	"O38",	"O39",	"O40",	"O42",	"O44",	"O45",	"O46",	"O47",	"O48",	"O50",	"O52",	"O53",	"O55",	"O56",	"O57",	"O58",	"O59",	"O60",	"O62",	"O63",	"O64",	"O65",	"O75",	"P100X10",	"P100X11",	"P100X12",	"P100X13",	"P100X14",	"P100X15",	"P100X16",	"P100X16,5",	"P100X20",	"P100X25",	"P100X28",	"P100X30",	"P100X35",	"P100X40",	"P100X5",	"P100X50",	"P100X53",	"P100X55",	"P100X6",	"P100X7",	"P100X8",	"P100X9",	"P105X15",	"P105X16",	"P105X16,5",	"P105X35",	"P105X40",	"P110X10",	"P110X12",	"P110X15",	"P110X16",	"P110X20",	"P110X22",	"P110X25",	"P110X30",	"P110X35",	"P110X40",	"P110X42",	"P110X5",	"P110X6",	"P110X7",	"P110X8",	"P120X10",	"P120X12",	"P120X15",	"P120X16",	"P120X20",	"P120X25",	"P120X30",	"P120X37",	"P120X5",	"P120X6",	"P120X8",	"P120X9",	"P125X15",	"P125X20",	"P125X25",	"P125X9",	"P18X6",	"P20X10",	"P20X12",	"P20X15",	"P20X4",	"P20X5",	"P20X6",	"P20X7",	"P20X8",	"P20X9",	"P22X10",	"P22X11",	"P22X14",	"P22X7",	"P22X9",	"P24X5",	"P25X10",	"P25X12",	"P25X14",	"P25X15",	"P25X16",	"P25X4",	"P25X4.6",	"P25X5",	"P25X6",	"P25X7",	"P25X8",	"P26X15",	"P27X11",	"P27X5",	"P27X6",	"P27X7",	"P27X9",	"P30X10",	"P30X12",	"P30X15",	"P30X16",	"P30X18",	"P30X20",	"P30X4",	"P30X5",	"P30X6",	"P30X7",	"P30X8",	"P32X10",	"P32X8",	"P34X11",	"P34X14",	"P34X18",	"P34X6",	"P34X7",	"P34X9",	"P35X10",	"P35X12",	"P35X15",	"P35X19",	"P35X20",	"P35X25",	"P35X4",	"P35X5",	"P35X6",	"P35X7",	"P35X8",	"P36X20,5",	"P36X5",	"P38X10",	"P38X17",	"P38X6",	"P40X10",	"P40X12",	"P40X14",	"P40X15",	"P40X16",	"P40X18",	"P40X20",	"P40X25",	"P40X30",	"P40X4",	"P40X5",	"P40X6",	"P40X8",	"P42X11",	"P42X20",	"P42X9",	"P45X10",	"P45X12",	"P45X14",	"P45X15",	"P45X16",	"P45X20",	"P45X25",	"P45X30",	"P45X5",	"P45X6",	"P45X7",	"P45X8",	"P45X9",	"P50X10",	"P50X12",	"P50X14",	"P50X15",	"P50X16",	"P50X18",	"P50X20",	"P50X22",	"P50X24",	"P50X25",	"P50X30",	"P50X35",	"P50X4",	"P50X5",	"P50X6",	"P50X7",	"P50X8",	"P52X32",	"P55X10",	"P55X15",	"P55X18",	"P55X20",	"P55X24",	"P55X25",	"P55X30",	"P55X5",	"P55X6",	"P55X8",	"P60X10",	"P60X12",	"P60X14",	"P60X15",	"P60X16",	"P60X20",	"P60X25",	"P60X30",	"P60X35",	"P60X4",	"P60X40",	"P60X45",	"P60X5",	"P60X6",	"P60X7",	"P60X8",	"P62X32",	"P63X10",	"P63X12",	"P63X5",	"P63X6",	"P63X8",	"P65X10",	"P65X12",	"P65X15",	"P65X16",	"P65X20",	"P65X30",	"P65X35",	"P65X40",	"P65X5",	"P65X6",	"P65X8",	"P68X20",	"P70X10",	"P70X12",	"P70X14",	"P70X15",	"P70X16",	"P70X18",	"P70X20",	"P70X25",	"P70X30",	"P70X35",	"P70X40",	"P70X5",	"P70X50",	"P70X6",	"P70X7",	"P70X8",	"P73X12",	"P75X10",	"P75X12",	"P75X15",	"P75X20",	"P75X25",	"P75X35",	"P75X40",	"P75X45",	"P75X5",	"P75X6",	"P75X8",	"P75X9",	"P80X10",	"P80X12",	"P80X14",	"P80X15",	"P80X16",	"P80X20",	"P80X25",	"P80X30",	"P80X35",	"P80X40",	"P80X5",	"P80X50",	"P80X6",	"P80X7",	"P80X8",	"P80X9",	"P85X5",	"P85X55",	"P85X8",	"P90X10",	"P90X12",	"P90X13",	"P90X14",	"P90X15",	"P90X16",	"P90X20",	"P90X22",	"P90X25",	"P90X30",	"P90X35",	"P90X40",	"P90X45",	"P90X5",	"P90X50",	"P90X6",	"P90X8",	"P92X25",	"P92X5",	"P95X35",	"P95X45",	"P95X50",	"SA100X30",	"SA70X16",	"SA70X18",	"SA70X22",	"SA80X19",	"SA80X22",	"SA80X25",	"SA80X26",	"SA80X27",	"SA80X28",	"SA90X24",	"SA90X25",	"SA90X27",	"SA90X28",	"SA90X29",	"SB100X18",	"SB90X26",	"SC100X40",	"SC100X41",	"SC71X56.5",	"SC80X30",	"SC80X31",	"SC90X30",	"SC90X39",	"T40",	"UE100",	"UE120",	"UE80",	"U100",	"U120",	"U50",	"U65",	"U80",	"V35X35X3",	"V35X35X3.5",	"V35X35X4",	"V35X35X5",	"V38X38X6",	"V38X4.5",	"V40X40X3",	"V40X40X3.5",	"V40X40X4",	"V40X40X5",	"V40X40X6",	"V45X45X3",	"V45X45X4",	"V45X45X4.5",	"V45X45X5",	"V45X45X6",	"V45X45X7",	"V50X50X3",	"V50X50X4",	"V50X50X5",	"V50X50X6",	"V50X50X7",	"V50X50X8",	"V50X50X9",	"V55X55X4",	"V55X55X5",	"V55X55X6",	"V60X60X10",	"V60X60X4",	"V60X60X5",	"V60X60X6",	"V60X60X7",	"V60X60X8",	"V63X63X5",	"V63X63X6",	"V63X63X7",	"V65X65X10",	"V65X65X4",	"V65X65X5",	"V65X65X6",	"V65X65X7",	"V65X65X8",	"V65X65X9",	"V70X70X10",	"V70X70X5",	"V70X70X6",	"V70X70X7",	"V70X70X8",	"V70X70X9",	"V75X75X10",	"V75X75X5",	"V75X75X6",	"V75X75X7",	"V75X75X8",	"V75X75X9",	"V76X76X13",	"V76X76X6.5",	"V76X76X8",	"V76X76X9.5",	"V80X80X10",	"V80X80X12",	"V80X80X5",	"V80X80X6",	"V80X80X7",	"V80X80X8",	"V80X80X9",	"V90X90X10",	"V90X90X5",	"V90X90X6",	"V90X90X7",	"V90X90X8",	"V90X90X9",	"WG16",	"WG+18",	"WG20",	"WG+22",	"WG+25",	"WG25",	"WG+28",	"WG28",	"WG+30",	"WG32",	"WG+35",	"WG40",	"WG+43",	"WG43",	"WG+50",	"WG50",	"WG+57.5",	"WG+63.5",	"WG+75",	"WG75",	"WH57.5",	"WH63.5"
+];
+        autocomplete(document.getElementById("profileInput"), profiles);
+    </script>
+        <script>
+            // Výchozí hodnoty
+            let rows = 1;
+            let columns = 1;
+    
+            // Funkce pro vytvoření tabulky
+            function createTable() {
+                const table = document.getElementById('dynamicTable');
+                
+                // Vyčistit stávající obsah tabulky
+                table.innerHTML = '';
+                
+                // Vytvořit tabulku
+                for (let i = 0; i < rows; i++) {
+                    const row = document.createElement('tr');
+                    
+                    for (let j = 0; j < columns; j++) {
+                        const cell = document.createElement('td');
+                        // Buňky jsou prázdné
+                        row.appendChild(cell);
+                    }
+                    
+                    table.appendChild(row);
+                }
+            }
+    
+            // Nastavení event listenerů
+            document.getElementById('rowsInput').addEventListener('input', function() {
+                if (this.value && this.validity.valid && this.value > 0) {
+                    rows = parseInt(this.value);
+                    createTable();
+                }
+            });
+    
+            document.getElementById('columnsInput').addEventListener('input', function() {
+                if (this.value && this.validity.valid && this.value > 0) {
+                    columns = parseInt(this.value);
+                    createTable();
+                }
+            });
+    
+            // Inicializace při načtení stránky
+            window.onload = createTable;
+        </script>
+     <script>
+        const data = [
+{"profil":"E100","kgm":8.9},
+{"profil":"E100A"	,"kgm":	6.89},
+{"profil":"E100AA"	,"kgm":	6.72},
+{"profil":"E120"	,"kgm":	10.4},
+{"profil":"E120A"	,"kgm":	8.6},
+{"profil":"E120AA"	,"kgm":	8.36},
+{"profil":"E140"	,"kgm":	12.9},
+{"profil":"E140A"	,"kgm":	10.5},
+{"profil":"E140AA"	,"kgm":	10.05},
+{"profil":"E80"	,"kgm":	6},
+{"profil":"E80A"	,"kgm":	5},
+{"profil":"E80AA"	,"kgm":	4.95},
+{"profil":"FAB14"	,"kgm":	1.21},
+{"profil":"FAB16"	,"kgm":	1.58},
+{"profil":"FAB20"	,"kgm":	2.47},
+{"profil":"FAB22"	,"kgm":	2.98},
+{"profil":"FAB25"	,"kgm":	3.85},
+{"profil":"FAB28"	,"kgm":	4.83},
+{"profil":"I100"	,"kgm":	8.34},
+{"profil":"I120"	,"kgm":	11.1},
+{"profil":"I140"	,"kgm":	14.3},
+{"profil":"I80"	,"kgm":	5.94},
+{"profil":"KT15"	,"kgm":	1.4},
+{"profil":"KT15N"	,"kgm":	1.41},
+{"profil":"KT20"	,"kgm":	2.51},
+{"profil":"KT20N"	,"kgm":	2.51},
+{"profil":"KT26.5"	,"kgm":	4.48},
+{"profil":"KT26.5N"	,"kgm":	4.48},
+{"profil":"O10"	,"kgm":	0.617},
+{"profil":"O12"	,"kgm":	0.89},
+{"profil":"O14"	,"kgm":	1.21},
+{"profil":"O15"	,"kgm":	1.39},
+{"profil":"O16"	,"kgm":	1.58},
+{"profil":"O17"	,"kgm":	1.78},
+{"profil":"O18"	,"kgm":	2},
+{"profil":"O19"	,"kgm":	2.23},
+{"profil":"O20"	,"kgm":	2.47},
+{"profil":"O22"	,"kgm":	2.98},
+{"profil":"O23"	,"kgm":	3.26},
+{"profil":"O24"	,"kgm":	3.55},
+{"profil":"O25"	,"kgm":	3.85},
+{"profil":"O26"	,"kgm":	4.17},
+{"profil":"O27"	,"kgm":	4.49},
+{"profil":"O28"	,"kgm":	4.83},
+{"profil":"O29"	,"kgm":	5.19},
+{"profil":"O30"	,"kgm":	5.55},
+{"profil":"O31"	,"kgm":	5.92},
+{"profil":"O32"	,"kgm":	6.31},
+{"profil":"O34"	,"kgm":	7.13},
+{"profil":"O35"	,"kgm":	7.55},
+{"profil":"O36"	,"kgm":	7.99},
+{"profil":"O37"	,"kgm":	8.44},
+{"profil":"O38"	,"kgm":	8.9},
+{"profil":"O39"	,"kgm":	9.38},
+{"profil":"O40"	,"kgm":	9.86},
+{"profil":"O42"	,"kgm":	10.9},
+{"profil":"O44"	,"kgm":	11.9},
+{"profil":"O45"	,"kgm":	12.5},
+{"profil":"O46"	,"kgm":	13},
+{"profil":"O47"	,"kgm":	13.6},
+{"profil":"O48"	,"kgm":	14.2},
+{"profil":"O50"	,"kgm":	15.4},
+{"profil":"O52"	,"kgm":	16.7},
+{"profil":"O53"	,"kgm":	17.31},
+{"profil":"O55"	,"kgm":	18.7},
+{"profil":"O56"	,"kgm":	19.33},
+{"profil":"O57"	,"kgm":	20},
+{"profil":"O58"	,"kgm":	20.73},
+{"profil":"O59"	,"kgm":	21.46},
+{"profil":"O60"	,"kgm":	22.2},
+{"profil":"O62"	,"kgm":	23.7},
+{"profil":"O63"	,"kgm":	24.47},
+{"profil":"O64"	,"kgm":	25.2},
+{"profil":"O65"	,"kgm":	26},
+{"profil":"O75"	,"kgm":	34.7},
+{"profil":"P100X10"	,"kgm":	7.85},
+{"profil":"P100X11"	,"kgm":	8.63},
+{"profil":"P100X12"	,"kgm":	9.42},
+{"profil":"P100X13"	,"kgm":	10.205},
+{"profil":"P100X14"	,"kgm":	11},
+{"profil":"P100X15"	,"kgm":	11.8},
+{"profil":"P100X16"	,"kgm":	12.56},
+{"profil":"P100X16,5"	,"kgm":	12.95},
+{"profil":"P100X20"	,"kgm":	15.7},
+{"profil":"P100X25"	,"kgm":	19.6},
+{"profil":"P100X28"	,"kgm":	21.98},
+{"profil":"P100X30"	,"kgm":	23.6},
+{"profil":"P100X35"	,"kgm":	27.5},
+{"profil":"P100X40"	,"kgm":	31.4},
+{"profil":"P100X5"	,"kgm":	3.93},
+{"profil":"P100X50"	,"kgm":	39.25},
+{"profil":"P100X53"	,"kgm":	41.6},
+{"profil":"P100X55"	,"kgm":	43.175},
+{"profil":"P100X6"	,"kgm":	4.71},
+{"profil":"P100X7"	,"kgm":	5.5},
+{"profil":"P100X8"	,"kgm":	6.28},
+{"profil":"P100X9"	,"kgm":	7.07},
+{"profil":"P105X15"	,"kgm":	12.36},
+{"profil":"P105X16"	,"kgm":	13.188},
+{"profil":"P105X16,5"	,"kgm":	13.6},
+{"profil":"P105X35"	,"kgm":	28.84},
+{"profil":"P105X40"	,"kgm":	32.97},
+{"profil":"P110X10"	,"kgm":	8.64},
+{"profil":"P110X12"	,"kgm":	10.4},
+{"profil":"P110X15"	,"kgm":	13},
+{"profil":"P110X16"	,"kgm":	13.8},
+{"profil":"P110X20"	,"kgm":	17.3},
+{"profil":"P110X22"	,"kgm":	19},
+{"profil":"P110X25"	,"kgm":	21.6},
+{"profil":"P110X30"	,"kgm":	25.9},
+{"profil":"P110X35"	,"kgm":	30.2},
+{"profil":"P110X40"	,"kgm":	34.5},
+{"profil":"P110X42"	,"kgm":	36.267},
+{"profil":"P110X5"	,"kgm":	4.32},
+{"profil":"P110X6"	,"kgm":	5.18},
+{"profil":"P110X7"	,"kgm":	6.04},
+{"profil":"P110X8"	,"kgm":	6.91},
+{"profil":"P120X10"	,"kgm":	9.42},
+{"profil":"P120X12"	,"kgm":	11.3},
+{"profil":"P120X15"	,"kgm":	14.1},
+{"profil":"P120X16"	,"kgm":	15.08},
+{"profil":"P120X20"	,"kgm":	18.8},
+{"profil":"P120X25"	,"kgm":	23.6},
+{"profil":"P120X30"	,"kgm":	28.3},
+{"profil":"P120X37"	,"kgm":	34.854},
+{"profil":"P120X5"	,"kgm":	4.71},
+{"profil":"P120X6"	,"kgm":	5.65},
+{"profil":"P120X8"	,"kgm":	7.54},
+{"profil":"P120X9"	,"kgm":	8.48},
+{"profil":"P125X15"	,"kgm":	14.718},
+{"profil":"P125X20"	,"kgm":	19.625},
+{"profil":"P125X25"	,"kgm":	24.53},
+{"profil":"P125X9"	,"kgm":	8.831},
+{"profil":"P18X6"	,"kgm":	0.848},
+{"profil":"P20X10"	,"kgm":	1.57},
+{"profil":"P20X12"	,"kgm":	1.88},
+{"profil":"P20X15"	,"kgm":	2.36},
+{"profil":"P20X4"	,"kgm":	0.63},
+{"profil":"P20X5"	,"kgm":	0.785},
+{"profil":"P20X6"	,"kgm":	0.94},
+{"profil":"P20X7"	,"kgm":	1.1},
+{"profil":"P20X8"	,"kgm":	1.26},
+{"profil":"P20X9"	,"kgm":	1.41},
+{"profil":"P22X10"	,"kgm":	1.73},
+{"profil":"P22X11"	,"kgm":	1.9},
+{"profil":"P22X14"	,"kgm":	0},
+{"profil":"P22X7"	,"kgm":	0},
+{"profil":"P22X9"	,"kgm":	0},
+{"profil":"P24X5"	,"kgm":	0},
+{"profil":"P25X10"	,"kgm":	1.86},
+{"profil":"P25X12"	,"kgm":	2.36},
+{"profil":"P25X14"	,"kgm":	2.74},
+{"profil":"P25X15"	,"kgm":	2.94},
+{"profil":"P25X16"	,"kgm":	3.14},
+{"profil":"P25X4"	,"kgm":	0.79},
+{"profil":"P25X4.6"	,"kgm":	0.904},
+{"profil":"P25X5"	,"kgm":	0.98},
+{"profil":"P25X6"	,"kgm":	1.18},
+{"profil":"P25X7"	,"kgm":	1.37},
+{"profil":"P25X8"	,"kgm":	1.57},
+{"profil":"P26X15"	,"kgm":	3.06},
+{"profil":"P27X11"	,"kgm":	0},
+{"profil":"P27X5"	,"kgm":	0},
+{"profil":"P27X6"	,"kgm":	0},
+{"profil":"P27X7"	,"kgm":	0},
+{"profil":"P27X9"	,"kgm":	0},
+{"profil":"P30X10"	,"kgm":	2.36},
+{"profil":"P30X12"	,"kgm":	2.8},
+{"profil":"P30X15"	,"kgm":	3.66},
+{"profil":"P30X16"	,"kgm":	3.76},
+{"profil":"P30X18"	,"kgm":	4.24},
+{"profil":"P30X20"	,"kgm":	4.71},
+{"profil":"P30X4"	,"kgm":	0.94},
+{"profil":"P30X5"	,"kgm":	1.18},
+{"profil":"P30X6"	,"kgm":	1.41},
+{"profil":"P30X7"	,"kgm":	1.65},
+{"profil":"P30X8"	,"kgm":	1.88},
+{"profil":"P32X10"	,"kgm":	2.51},
+{"profil":"P32X8"	,"kgm":	2.01},
+{"profil":"P34X11"	,"kgm":	0},
+{"profil":"P34X14"	,"kgm":	0},
+{"profil":"P34X18"	,"kgm":	0},
+{"profil":"P34X6"	,"kgm":	0},
+{"profil":"P34X7"	,"kgm":	0},
+{"profil":"P34X9"	,"kgm":	0},
+{"profil":"P35X10"	,"kgm":	2.75},
+{"profil":"P35X12"	,"kgm":	3.3},
+{"profil":"P35X15"	,"kgm":	4.12},
+{"profil":"P35X19"	,"kgm":	5.22},
+{"profil":"P35X20"	,"kgm":	5.5},
+{"profil":"P35X25"	,"kgm":	6.87},
+{"profil":"P35X4"	,"kgm":	1.1},
+{"profil":"P35X5"	,"kgm":	1.37},
+{"profil":"P35X6"	,"kgm":	1.65},
+{"profil":"P35X7"	,"kgm":	1.923},
+{"profil":"P35X8"	,"kgm":	2.2},
+{"profil":"P36X20,5"	,"kgm":	5.793},
+{"profil":"P36X5"	,"kgm":	1.413},
+{"profil":"P38X10"	,"kgm":	2.98},
+{"profil":"P38X17"	,"kgm":	5.071},
+{"profil":"P38X6"	,"kgm":	1.79},
+{"profil":"P40X10"	,"kgm":	3.14},
+{"profil":"P40X12"	,"kgm":	3.77},
+{"profil":"P40X14"	,"kgm":	4.396},
+{"profil":"P40X15"	,"kgm":	4.71},
+{"profil":"P40X16"	,"kgm":	5.02},
+{"profil":"P40X18"	,"kgm":	5.65},
+{"profil":"P40X20"	,"kgm":	6.28},
+{"profil":"P40X25"	,"kgm":	7.85},
+{"profil":"P40X30"	,"kgm":	9.42},
+{"profil":"P40X4"	,"kgm":	1.26},
+{"profil":"P40X5"	,"kgm":	1.57},
+{"profil":"P40X6"	,"kgm":	1.88},
+{"profil":"P40X8"	,"kgm":	2.51},
+{"profil":"P42X11"	,"kgm":	0},
+{"profil":"P42X20"	,"kgm":	6.594},
+{"profil":"P42X9"	,"kgm":	0},
+{"profil":"P45X10"	,"kgm":	3.53},
+{"profil":"P45X12"	,"kgm":	4.24},
+{"profil":"P45X14"	,"kgm":	4.95},
+{"profil":"P45X15"	,"kgm":	5.3},
+{"profil":"P45X16"	,"kgm":	5.02},
+{"profil":"P45X20"	,"kgm":	7.07},
+{"profil":"P45X25"	,"kgm":	8.83},
+{"profil":"P45X30"	,"kgm":	10.6},
+{"profil":"P45X5"	,"kgm":	1.77},
+{"profil":"P45X6"	,"kgm":	2.12},
+{"profil":"P45X7"	,"kgm":	2.472},
+{"profil":"P45X8"	,"kgm":	2.83},
+{"profil":"P45X9"	,"kgm":	3.18},
+{"profil":"P50X10"	,"kgm":	3.93},
+{"profil":"P50X12"	,"kgm":	4.71},
+{"profil":"P50X14"	,"kgm":	5.5},
+{"profil":"P50X15"	,"kgm":	5.89},
+{"profil":"P50X16"	,"kgm":	6.28},
+{"profil":"P50X18"	,"kgm":	7.065},
+{"profil":"P50X20"	,"kgm":	7.85},
+{"profil":"P50X22"	,"kgm":	8.635},
+{"profil":"P50X24"	,"kgm":	9.42},
+{"profil":"P50X25"	,"kgm":	9.81},
+{"profil":"P50X30"	,"kgm":	11.8},
+{"profil":"P50X35"	,"kgm":	13.7},
+{"profil":"P50X4"	,"kgm":	1.57},
+{"profil":"P50X5"	,"kgm":	1.96},
+{"profil":"P50X6"	,"kgm":	2.36},
+{"profil":"P50X7"	,"kgm":	2.75},
+{"profil":"P50X8"	,"kgm":	3.14},
+{"profil":"P52X32"	,"kgm":	13.062},
+{"profil":"P55X10"	,"kgm":	4.32},
+{"profil":"P55X15"	,"kgm":	9.48},
+{"profil":"P55X18"	,"kgm":	7.77},
+{"profil":"P55X20"	,"kgm":	8.64},
+{"profil":"P55X24"	,"kgm":	10.362},
+{"profil":"P55X25"	,"kgm":	10.8},
+{"profil":"P55X30"	,"kgm":	13},
+{"profil":"P55X5"	,"kgm":	2.16},
+{"profil":"P55X6"	,"kgm":	2.59},
+{"profil":"P55X8"	,"kgm":	3.45},
+{"profil":"P60X10"	,"kgm":	4.71},
+{"profil":"P60X12"	,"kgm":	5.65},
+{"profil":"P60X14"	,"kgm":	6.59},
+{"profil":"P60X15"	,"kgm":	7.07},
+{"profil":"P60X16"	,"kgm":	7.54},
+{"profil":"P60X20"	,"kgm":	9.42},
+{"profil":"P60X25"	,"kgm":	11.72},
+{"profil":"P60X30"	,"kgm":	14.1},
+{"profil":"P60X35"	,"kgm":	16.5},
+{"profil":"P60X4"	,"kgm":	1.884},
+{"profil":"P60X40"	,"kgm":	18.85},
+{"profil":"P60X45"	,"kgm":	21.195},
+{"profil":"P60X5"	,"kgm":	2.369},
+{"profil":"P60X6"	,"kgm":	2.83},
+{"profil":"P60X7"	,"kgm":	3.297},
+{"profil":"P60X8"	,"kgm":	3.77},
+{"profil":"P62X32"	,"kgm":	15.57},
+{"profil":"P63X10"	,"kgm":	4.95},
+{"profil":"P63X12"	,"kgm":	5.93},
+{"profil":"P63X5"	,"kgm":	2.47},
+{"profil":"P63X6"	,"kgm":	2.97},
+{"profil":"P63X8"	,"kgm":	3.96},
+{"profil":"P65X10"	,"kgm":	5.1},
+{"profil":"P65X12"	,"kgm":	6.12},
+{"profil":"P65X15"	,"kgm":	7.65},
+{"profil":"P65X16"	,"kgm":	8.16},
+{"profil":"P65X20"	,"kgm":	10.2},
+{"profil":"P65X30"	,"kgm":	15.3},
+{"profil":"P65X35"	,"kgm":	17.86},
+{"profil":"P65X40"	,"kgm":	20.4},
+{"profil":"P65X5"	,"kgm":	2.55},
+{"profil":"P65X6"	,"kgm":	3.06},
+{"profil":"P65X8"	,"kgm":	4.08},
+{"profil":"P68X20"	,"kgm":	10.68},
+{"profil":"P70X10"	,"kgm":	5.5},
+{"profil":"P70X12"	,"kgm":	6.59},
+{"profil":"P70X14"	,"kgm":	7.69},
+{"profil":"P70X15"	,"kgm":	8.24},
+{"profil":"P70X16"	,"kgm":	8.79},
+{"profil":"P70X18"	,"kgm":	9.89},
+{"profil":"P70X20"	,"kgm":	11},
+{"profil":"P70X25"	,"kgm":	13.7},
+{"profil":"P70X30"	,"kgm":	16.5},
+{"profil":"P70X35"	,"kgm":	19.2},
+{"profil":"P70X40"	,"kgm":	22.05},
+{"profil":"P70X5"	,"kgm":	2.75},
+{"profil":"P70X50"	,"kgm":	27.5},
+{"profil":"P70X6"	,"kgm":	3.3},
+{"profil":"P70X7"	,"kgm":	3.85},
+{"profil":"P70X8"	,"kgm":	4.4},
+{"profil":"P73X12"	,"kgm":	7.06},
+{"profil":"P75X10"	,"kgm":	5.88},
+{"profil":"P75X12"	,"kgm":	7.06},
+{"profil":"P75X15"	,"kgm":	8.83},
+{"profil":"P75X20"	,"kgm":	11.8},
+{"profil":"P75X25"	,"kgm":	14.7},
+{"profil":"P75X35"	,"kgm":	20.6},
+{"profil":"P75X40"	,"kgm":	23.6},
+{"profil":"P75X45"	,"kgm":	26.49},
+{"profil":"P75X5"	,"kgm":	2.94},
+{"profil":"P75X6"	,"kgm":	3.53},
+{"profil":"P75X8"	,"kgm":	4.71},
+{"profil":"P75X9"	,"kgm":	5.3},
+{"profil":"P80X10"	,"kgm":	6.28},
+{"profil":"P80X12"	,"kgm":	7.54},
+{"profil":"P80X14"	,"kgm":	8.79},
+{"profil":"P80X15"	,"kgm":	9.42},
+{"profil":"P80X16"	,"kgm":	10},
+{"profil":"P80X20"	,"kgm":	12.6},
+{"profil":"P80X25"	,"kgm":	15.741},
+{"profil":"P80X30"	,"kgm":	18.8},
+{"profil":"P80X35"	,"kgm":	22},
+{"profil":"P80X40"	,"kgm":	25.12},
+{"profil":"P80X5"	,"kgm":	3.14},
+{"profil":"P80X50"	,"kgm":	31.4},
+{"profil":"P80X6"	,"kgm":	3.77},
+{"profil":"P80X7"	,"kgm":	4.4},
+{"profil":"P80X8"	,"kgm":	5.02},
+{"profil":"P80X9"	,"kgm":	5.65},
+{"profil":"P85X5"	,"kgm":	3.336},
+{"profil":"P85X55"	,"kgm":	36.69},
+{"profil":"P85X8"	,"kgm":	5.338},
+{"profil":"P90X10"	,"kgm":	7.07},
+{"profil":"P90X12"	,"kgm":	8.48},
+{"profil":"P90X13"	,"kgm":	9.185},
+{"profil":"P90X14"	,"kgm":	9.89},
+{"profil":"P90X15"	,"kgm":	10.6},
+{"profil":"P90X16"	,"kgm":	11.3},
+{"profil":"P90X20"	,"kgm":	14.1},
+{"profil":"P90X22"	,"kgm":	15.54},
+{"profil":"P90X25"	,"kgm":	17.7},
+{"profil":"P90X30"	,"kgm":	21.2},
+{"profil":"P90X35"	,"kgm":	24.7},
+{"profil":"P90X40"	,"kgm":	28.3},
+{"profil":"P90X45"	,"kgm":	31.79},
+{"profil":"P90X5"	,"kgm":	3.53},
+{"profil":"P90X50"	,"kgm":	35.32},
+{"profil":"P90X6"	,"kgm":	4.24},
+{"profil":"P90X8"	,"kgm":	5.65},
+{"profil":"P92X25"	,"kgm":	18.06},
+{"profil":"P92X5"	,"kgm":	3.61},
+{"profil":"P95X35"	,"kgm":	26.1},
+{"profil":"P95X45"	,"kgm":	33.558},
+{"profil":"P95X50"	,"kgm":	37.29},
+{"profil":"SA100X30"	,"kgm":	22.02},
+{"profil":"SA70X16"	,"kgm":	8.36},
+{"profil":"SA70X18"	,"kgm":	9.35},
+{"profil":"SA70X22"	,"kgm":	13},
+{"profil":"SA80X19"	,"kgm":	11.32},
+{"profil":"SA80X22"	,"kgm":	13},
+{"profil":"SA80X25"	,"kgm":	14.65},
+{"profil":"SA80X26"	,"kgm":	15.19},
+{"profil":"SA80X27"	,"kgm":	15.73},
+{"profil":"SA80X28"	,"kgm":	16.26},
+{"profil":"SA90X24"	,"kgm":	15.99},
+{"profil":"SA90X25"	,"kgm":	16.61},
+{"profil":"SA90X27"	,"kgm":	17.85},
+{"profil":"SA90X28"	,"kgm":	18.46},
+{"profil":"SA90X29"	,"kgm":	19.07},
+{"profil":"SB100X18"	,"kgm":	13.86},
+{"profil":"SB90X26"	,"kgm":	17.96},
+{"profil":"SC100X40"	,"kgm":	30.97},
+{"profil":"SC100X41"	,"kgm":	31.21},
+{"profil":"SC71X56.5"	,"kgm":	30.51},
+{"profil":"SC80X30"	,"kgm":	18.41},
+{"profil":"SC80X31"	,"kgm":	19.04},
+{"profil":"SC90X30"	,"kgm":	20.76},
+{"profil":"SC90X39"	,"kgm":	26.738},
+{"profil":"T40"	,"kgm":	6.06},
+{"profil":"UE100"	,"kgm":	8.59},
+{"profil":"UE120"	,"kgm":	10.4},
+{"profil":"UE80"	,"kgm":	7.05},
+{"profil":"U100"	,"kgm":	10.6},
+{"profil":"U120"	,"kgm":	13.4},
+{"profil":"U50"	,"kgm":	5.48},
+{"profil":"U65"	,"kgm":	6.95},
+{"profil":"U80"	,"kgm":	8.47},
+{"profil":"V35X35X3"	,"kgm":	1.6},
+{"profil":"V35X35X3.5"	,"kgm":	1.845},
+{"profil":"V35X35X4"	,"kgm":	2.09},
+{"profil":"V35X35X5"	,"kgm":	2.57},
+{"profil":"V38X38X6"	,"kgm":	3.33},
+{"profil":"V38X4.5"	,"kgm":	2.56},
+{"profil":"V40X40X3"	,"kgm":	1.84},
+{"profil":"V40X40X3.5"	,"kgm":	2.13},
+{"profil":"V40X40X4"	,"kgm":	2.42},
+{"profil":"V40X40X5"	,"kgm":	2.97},
+{"profil":"V40X40X6"	,"kgm":	3.52},
+{"profil":"V45X45X3"	,"kgm":	2.09},
+{"profil":"V45X45X4"	,"kgm":	2.74},
+{"profil":"V45X45X4.5"	,"kgm":	3.06},
+{"profil":"V45X45X5"	,"kgm":	3.38},
+{"profil":"V45X45X6"	,"kgm":	3.99},
+{"profil":"V45X45X7"	,"kgm":	4.6},
+{"profil":"V50X50X3"	,"kgm":	2.33},
+{"profil":"V50X50X4"	,"kgm":	3.06},
+{"profil":"V50X50X5"	,"kgm":	3.77},
+{"profil":"V50X50X6"	,"kgm":	4.47},
+{"profil":"V50X50X7"	,"kgm":	5.15},
+{"profil":"V50X50X8"	,"kgm":	5.81},
+{"profil":"V50X50X9"	,"kgm":	6.47},
+{"profil":"V55X55X4"	,"kgm":	3.39},
+{"profil":"V55X55X5"	,"kgm":	4.18},
+{"profil":"V55X55X6"	,"kgm":	4.95},
+{"profil":"V60X60X10"	,"kgm":	8.66},
+{"profil":"V60X60X4"	,"kgm":	3.7},
+{"profil":"V60X60X5"	,"kgm":	4.57},
+{"profil":"V60X60X6"	,"kgm":	5.42},
+{"profil":"V60X60X7"	,"kgm":	6.26},
+{"profil":"V60X60X8"	,"kgm":	7.09},
+{"profil":"V63X63X5"	,"kgm":	4.82},
+{"profil":"V63X63X6"	,"kgm":	5.73},
+{"profil":"V63X63X7"	,"kgm":	6.61},
+{"profil":"V65X65X10"	,"kgm":	9.48},
+{"profil":"V65X65X4"	,"kgm":	4.04},
+{"profil":"V65X65X5"	,"kgm":	4.97},
+{"profil":"V65X65X6"	,"kgm":	5.91},
+{"profil":"V65X65X7"	,"kgm":	6.83},
+{"profil":"V65X65X8"	,"kgm":	7.73},
+{"profil":"V65X65X9"	,"kgm":	8.62},
+{"profil":"V70X70X10"	,"kgm":	10.28},
+{"profil":"V70X70X5"	,"kgm":	5.37},
+{"profil":"V70X70X6"	,"kgm":	6.38},
+{"profil":"V70X70X7"	,"kgm":	7.38},
+{"profil":"V70X70X8"	,"kgm":	8.37},
+{"profil":"V70X70X9"	,"kgm":	9.34},
+{"profil":"V75X75X10"	,"kgm":	11.07},
+{"profil":"V75X75X5"	,"kgm":	5.78},
+{"profil":"V75X75X6"	,"kgm":	6.85},
+{"profil":"V75X75X7"	,"kgm":	7.94},
+{"profil":"V75X75X8"	,"kgm":	9.03},
+{"profil":"V75X75X9"	,"kgm":	10.05},
+{"profil":"V76X76X13"	,"kgm":	0},
+{"profil":"V76X76X6.5"	,"kgm":	0},
+{"profil":"V76X76X8"	,"kgm":	0},
+{"profil":"V76X76X9.5"	,"kgm":	0},
+{"profil":"V80X80X10"	,"kgm":	11.9},
+{"profil":"V80X80X12"	,"kgm":	14.02},
+{"profil":"V80X80X5"	,"kgm":	6.17},
+{"profil":"V80X80X6"	,"kgm":	7.34},
+{"profil":"V80X80X7"	,"kgm":	8.49},
+{"profil":"V80X80X8"	,"kgm":	9.66},
+{"profil":"V80X80X9"	,"kgm":	10.75},
+{"profil":"V90X90X10"	,"kgm":	13.43},
+{"profil":"V90X90X5"	,"kgm":	6.95},
+{"profil":"V90X90X6"	,"kgm":	8.28},
+{"profil":"V90X90X7"	,"kgm":	9.59},
+{"profil":"V90X90X8"	,"kgm":	10.89},
+{"profil":"V90X90X9"	,"kgm":	12.2},
+{"profil":"WG16"	,"kgm":	1.58},
+{"profil":"WG+18"	,"kgm":	2},
+{"profil":"WG20"	,"kgm":	2.47},
+{"profil":"WG+22"	,"kgm":	2.98},
+{"profil":"WG+25"	,"kgm":	3.85},
+{"profil":"WG25"	,"kgm":	3.85},
+{"profil":"WG+28"	,"kgm":	4.83},
+{"profil":"WG28"	,"kgm":	4.83},
+{"profil":"WG+30"	,"kgm":	5.55},
+{"profil":"WG32"	,"kgm":	6.31},
+{"profil":"WG+35"	,"kgm":	7.55},
+{"profil":"WG40"	,"kgm":	9.86},
+{"profil":"WG+43"	,"kgm":	11.51},
+{"profil":"WG43"	,"kgm":	11.51},
+{"profil":"WG+50"	,"kgm":	15.4},
+{"profil":"WG50"	,"kgm":	15.4},
+{"profil":"WG+57.5"	,"kgm":	20.38},
+{"profil":"WG+63.5"	,"kgm":	24.86},
+{"profil":"WG+75"	,"kgm":	34.7},
+{"profil":"WG75"	,"kgm":	34.7},
+{"profil":"WH57.5"	,"kgm":	20.38},
+{"profil":"WH63.5"	,"kgm":	24.86}
+       ];
+
+        let foundKgm = null;
+        let foundProfile = '';
+
+        // Funkce pro vyhledání hodnoty kgm podle profilu
+        function findKgmByProfile(profile) {
+            const lowerProfile = profile.toLowerCase();
+            for (let item of data) {
+                if (item.profil.toLowerCase() === lowerProfile) {
+                    return item.kgm;
+                }
+            }
+            return null;
+        }
+
+        // Event listener pro vyhledání profilu
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const profileInput = document.getElementById('profileInput').value.trim();
+            foundKgm = findKgmByProfile(profileInput);
+            foundProfile = profileInput; // Store the found profile for later use
+            const profileResultDiv = document.getElementById('profileResult');
+            const calculationFormDiv = document.getElementById('calculationForm');
+            
+            if (foundKgm !== null) {
+                profileResultDiv.textContent = `Profil: ${profileInput} = ${foundKgm} kg/m`;
+                calculationFormDiv.classList.remove('hidden');
+            } else {
+                profileResultDiv.textContent = 'Profil nenalezen';
+                calculationFormDiv.classList.add('hidden');
+            }
+        });
+
+        // Event pro výpočet
+document.getElementById('calculateButton').addEventListener('click', function(){
+    if (foundKgm !== null) {
+        const mValue = parseFloat(document.getElementById('mInput').value.trim());
+        const hValue = parseFloat(document.getElementById('hInput').value.trim());
+        const minuValue = parseFloat(document.getElementById('minuInput').value.trim());
+        const rowsInput = parseFloat(document.getElementById('rowsInput').value.trim());
+        const columnsInput = parseFloat(document.getElementById('columnsInput').value.trim());
+        
+        const final2Value = hValue * mValue;
+        const finalValue = foundKgm * mValue;
+        const ksProduct = rowsInput * columnsInput;
+        const totalValue = finalValue * ksProduct;
+        const t2otalValue = (finalValue * ksProduct) - (minuValue * finalValue);
+        const minu2Value = ksProduct - minuValue
+
+        const resultDiv = document.getElementById('result');
+       
+        resultDiv.innerHTML = 
+            `Profil: ${foundProfile} = ${foundKgm} kg/m.<br>` +
+            `Délka: ${mValue}m = ${finalValue} kg.<br>` +
+            `Základna (${rowsInput}ks) krát výška (${columnsInput}ks) = ${ksProduct} kusů celkem.<br>` +
+            `Kusy k odečtení: ${minuValue} ks.<br>` +
+            `Celkem: <span class="red-text">${ksProduct} ks = ${totalValue.toFixed(1)} kg</span class="red-text"> /  nebo: <span class="green-text">  ${minu2Value} ks =  ${t2otalValue.toFixed(1)} kg </span class="green-text"> <br>`;
+        }
+        });
+        // Event pro druhý výpočet skutečné hmotnosti
+        document.getElementById('calculateButton2').addEventListener('click', function() {
+            const hValue = parseFloat(document.getElementById('hInput').value.trim());
+            const mValue = parseFloat(document.getElementById('mInput').value.trim());
+            const minuValue = parseFloat(document.getElementById('minuInput').value.trim());
+            const rowsInput = parseFloat(document.getElementById('rowsInput').value.trim());
+            const columnsInput = parseFloat(document.getElementById('columnsInput').value.trim());
+            
+            const final2Value = hValue * mValue;
+            const ksProduct = rowsInput * columnsInput;
+            const totalValue2 = final2Value * ksProduct;
+            const t2otalValue2 = (final2Value * ksProduct) - (minuValue * final2Value);
+            const minu2Value = ksProduct - minuValue
+
+            const resultDiv = document.getElementById('result');
+             
+            resultDiv.innerHTML = 
+                `Skutečná hmotnost: ${hValue}kg.<br>` +
+                `Délka: ${mValue}m = ${final2Value} kg.<br>` +
+                `Základna (${rowsInput}ks) krát výška (${columnsInput}ks) = ${ksProduct} kusů celkem.<br>` +
+                `Kusy k odečtení: ${minuValue} ks.<br>` +
+                `Celkem:  <span class="blue-text"> ${ksProduct} ks = ${totalValue2.toFixed(1)} kg </span class="blue-text">/ nebo:   <span class="green-text"> ${minu2Value} ks =   ${t2otalValue2.toFixed(1)}kg </span class="green-text">  <br>`;
+        });
+    </script>
+</body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Výpočet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .container {
+            max-width: 200px;
+            margin: auto;
+        }
+        .result {
+            margin-top: 200px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Výpočet skutečné metrové váhy</h2>
+        <label for="value1">Skutečná hmotnost svazku:</label>
+        <input type="number" id="value1" step="any"><br><br>
+        
+        <label for="value2">Délka svazku:</label>
+        <input type="number" id="value2" step="any"><br><br>
+        
+        <label for="value3">Počet kusů:</label>
+        <input type="number" id="value3" step="any"><br><br>
+        
+        <button onclick="calculate()">Vypočítat</button>
+        
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculate() {
+            const value1 = parseFloat(document.getElementById('value1').value);
+            const value2 = parseFloat(document.getElementById('value2').value);
+            const value3 = parseFloat(document.getElementById('value3').value);
+
+            if (isNaN(value1) || isNaN(value2) || isNaN(value3)) {
+                document.getElementById('result').textContent = 'Prosím, zadejte všechny hodnoty.';
+                return;
+            }
+
+            if (value2 === 0 || value3 === 0) {
+                document.getElementById('result').textContent = 'Nelze dělit nulou.';
+                return;
+            }
+
+            const intermediateResult = value1 / value2;
+            const finalResult = intermediateResult / value3;
+
+            document.getElementById('result').textContent = 'Skutečná hmotnost kg/m: ' + finalResult;
+        }
+        
+// Funkce pro zobrazení zprávy
+function showStatusMessage(message, isSuccess) {
+    const statusElement = document.getElementById('statusMessage');
+    if (statusElement) {
+        statusElement.textContent = message;
+        statusElement.style.display = 'block';
+        statusElement.style.backgroundColor = isSuccess ? '#d4edda' : '#f8d7da';
+        statusElement.style.color = isSuccess ? '#155724' : '#721c24';
+        statusElement.style.border = `1px solid ${isSuccess ? '#c3e6cb' : '#f5c6cb'}`;
+        
+        // Automatické zmizení zprávy po 3 sekundách
+        setTimeout(() => {
+            statusElement.style.display = 'none';
+        }, 3000);
+    }
+}
+
+
+
+// Funkce pro zobrazení zprávy
+function showStatusMessage(message, isSuccess) {
+    const statusElement = document.getElementById('statusMessage');
+    if (statusElement) {
+        statusElement.textContent = message;
+        statusElement.style.display = 'block';
+        statusElement.style.backgroundColor = isSuccess ? '#d4edda' : '#f8d7da';
+        statusElement.style.color = isSuccess ? '#155724' : '#721c24';
+        statusElement.style.border = `1px solid ${isSuccess ? '#c3e6cb' : '#f5c6cb'}`;
+        
+        // Automatické zmizení zprávy po 3 sekundách
+        setTimeout(() => {
+            statusElement.style.display = 'none';
+        }, 3000);
+    }
+}
+
+// Upravené funkce pro práci s localStorage
+function saveToLocalStorage() {
+    try {
+        const saveData = {
+            profile: document.getElementById('profileInput').value,
+            hValue: document.getElementById('hInput').value,
+            mValue: document.getElementById('mInput').value,
+            rows: document.getElementById('rowsInput').value,
+            columns: document.getElementById('columnsInput').value,
+            minuValue: document.getElementById('minuInput').value
+        };
+        
+        localStorage.setItem('profileCalculatorData', JSON.stringify(saveData));
+        showStatusMessage('Data byla úspěšně uložena', true);
+    } catch (error) {
+        showStatusMessage('Chyba při ukládání dat: ' + error.message, false);
+    }
+}
+
+function loadFromLocalStorage() {
+    try {
+        const savedData = localStorage.getItem('profileCalculatorData');
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            document.getElementById('profileInput').value = data.profile || '';
+            document.getElementById('hInput').value = data.hValue || '';
+            document.getElementById('mInput').value = data.mValue || '';
+            document.getElementById('rowsInput').value = data.rows || 1;
+            document.getElementById('columnsInput').value = data.columns || 1;
+            document.getElementById('minuInput').value = data.minuValue || 0;
+            
+            if (typeof createTable === 'function') {
+                createTable();
+            }
+            
+            showStatusMessage('Data byla úspěšně načtena', true);
+            
+            // Automatické vyhledání pokud je vyplněn profil
+            if (data.profile) {
+                setTimeout(() => {
+                    const searchButton = document.querySelector('#searchForm button[type="submit"]');
+                    if (searchButton) {
+                        searchButton.click();
+                    }
+                }, 500);
+            }
+        } else {
+            showStatusMessage('Nenalezena žádná uložená data', false);
+        }
+    } catch (error) {
+        showStatusMessage('Chyba při načítání dat: ' + error.message, false);
+    }
+}
+
+function clearLocalStorage() {
+    try {
+        localStorage.removeItem('profileCalculatorData');
+        document.getElementById('profileInput').value = '';
+        document.getElementById('hInput').value = '';
+        document.getElementById('mInput').value = '';
+        document.getElementById('rowsInput').value = 1;
+        document.getElementById('columnsInput').value = 1;
+        document.getElementById('minuInput').value = 0;
+        
+        if (typeof createTable === 'function') {
+            createTable();
+        }
+        
+        showStatusMessage('Data byla úspěšně vymazána', true);
+    } catch (error) {
+        showStatusMessage('Chyba při mazání dat: ' + error.message, false);
+    }
+}
+
+// Připojení tlačítka k funkci
+document.getElementById('clearDataButton')?.addEventListener('click', clearLocalStorage);
+document.getElementById('saveDataButton')?.addEventListener('click', saveToLocalStorage);
+document.getElementById('loadDataButton')?.addEventListener('click', loadFromLocalStorage);
+
+    </script>
+</body>
+</html>
